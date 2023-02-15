@@ -13,6 +13,7 @@
         <button id="btnLogar" class="btn btn-lg btn-primary btn-block" style="margin-top: 5px;" type="button">Login</button>
         <div style=" margin-top: 5px;" class="center">
             <span class="text-danger erroResult d-none "></span>
+            <span class="text-success successResult d-none "></span>
         </div>
     </form>
 </div>
@@ -44,6 +45,8 @@
                     //console.log(result);
                     if (result.mensagem)
                      {
+                         $(".successResult").text("Logado com Sucesso");
+                         $(".successResult").removeClass("d-none");
                          setTimeout(function(){
                              window.location.href = redirect;
                          },1000);
