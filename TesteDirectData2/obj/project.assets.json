@@ -10617,11 +10617,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Jrena\\Área de Trabalho\\Teste2\\TesteDirectData2\\TesteDirectData2\\TesteDirectData2.csproj",
+      "projectUniqueName": "C:\\Users\\Jrena\\GitHub\\Teste-dotnet\\TesteDirectData2\\TesteDirectData2.csproj",
       "projectName": "TesteDirectData2",
-      "projectPath": "C:\\Users\\Jrena\\Área de Trabalho\\Teste2\\TesteDirectData2\\TesteDirectData2\\TesteDirectData2.csproj",
+      "projectPath": "C:\\Users\\Jrena\\GitHub\\Teste-dotnet\\TesteDirectData2\\TesteDirectData2.csproj",
       "packagesPath": "C:\\Users\\Jrena\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Jrena\\Área de Trabalho\\Teste2\\TesteDirectData2\\TesteDirectData2\\obj\\",
+      "outputPath": "C:\\Users\\Jrena\\GitHub\\Teste-dotnet\\TesteDirectData2\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Jrena\\AppData\\Roaming\\NuGet\\NuGet.Config",

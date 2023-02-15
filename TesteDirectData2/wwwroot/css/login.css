@@ -50,4 +50,16 @@ input[type="password"] {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
+
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /*Abaixo definições para visualização teste*/
+    width: 100px;
+    height: 100px;
+    float: left;
+    border: 1px solid red;
 }

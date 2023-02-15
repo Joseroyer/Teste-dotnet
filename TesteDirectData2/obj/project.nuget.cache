@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "AtFES52qfvAHIuZ1B8VYJoXyi4BHoMjqq7I8aD2LW3IcyJf9VzedbIady630CPy9uR+fQgK2lJayQz1lRNcQhQ==",
+  "dgSpecHash": "NPArzTaAAClfzobQFeGsG/Rgkv7baUwJtpDCa7r3VtbFg8LUMbddndySKalizS1tcuK/PJTk8pWITwGGk/MS4Q==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Jrena\\Área de Trabalho\\Teste2\\TesteDirectData2\\TesteDirectData2\\TesteDirectData2.csproj",
+  "projectFilePath": "C:\\Users\\Jrena\\GitHub\\Teste-dotnet\\TesteDirectData2\\TesteDirectData2.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Jrena\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\Jrena\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",

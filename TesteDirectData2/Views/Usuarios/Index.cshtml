@@ -3,14 +3,17 @@
     <form class="form-signin">
         <h2 class="form-signin-heading text-align-center" style=" text-align: center; padding-top:2px">Login</h2>
         <div style=" margin-top: 5px;">
-            <input type="text" class="form-control" id="user" name="user" placeholder="Usuário" required="" autofocus="" />
+            <input type="text" class="form-control user" id="user" name="user" placeholder="Usuário"  autofocus="" />
             <span class="text-danger erroUser d-none"></span>
         </div>
         <div style=" margin-top: 5px;">
-            <input type="password" class="form-control" name="senha" id="senha" placeholder="Senha" required="" />
+            <input type="password" class="form-control senha" name="senha" id="senha" placeholder="Senha"  />
             <span class="text-danger erroSenha d-none"></span>
         </div>
         <button id="btnLogar" class="btn btn-lg btn-primary btn-block" style="margin-top: 5px;" type="button">Login</button>
+        <div style=" margin-top: 5px; center">
+            <span class="text-danger erroResult d-none "></span>
+        </div>
     </form>
 </div>
 
@@ -23,10 +26,14 @@
                 Senha: $('#senha').val()
             };
             console.log(usuario);
-            logar(usuario);
+            if(validarFormulario(usuario.User,usuario.Senha)){
+                logar(usuario);
+                limparFormulario();
+            }
         });
 
         function logar(usuario) {
+            redirect = '@Url.Action("exibirProdutos","Produtos")';
             $.ajax({
                 url: "@Url.Action("validarUser","Usuarios")",
                 method: "POST",
@@ -36,12 +43,61 @@
                 success: function (result) {
                     //console.log(result);
                     if (result.mensagem)
-                        alert("Logado");
-                    else
-                        alert(result.mensagem);
+                     {
+                         setTimeout(function(){
+                             window.location.href = redirect;
+                         },1000);
+                     }  
+                    else{
+                        $(".erroResult").text("Usuário não encontrado!");
+                        $(".erroResult").removeClass("d-none");
+                    }   
                 }
             });
         }
+        function validarFormulario(user, senha) {
+            let userValido = validarUser(user);
+            let senhaValido = validarSenha(senha);
+            //let precoVendaValido = validarPrecoVenda(produto.precoVenda);
+            //let estoqueValido = validarEstoque(produto.estoque);
+            if (userValido == true && senhaValido) {
+                return true;
+            }
+            return false;
+        }
+        function validarUser(nome) {
+            if (nome == '' ) {
+                $(".user").addClass('is-invalid');
+                $(".erroUser").text("Preencha o Usuário");
+                $(".erroUser").removeClass("d-none");
+                return false;
+            } else {
+                $(".user").removeClass('is-invalid');
+                $(".user").addClass('is-valid');
+                $(".erroUser").addClass("d-none");
+                return true;
+            }
+        }
+        function validarSenha(senha) {
+            if (senha == '' ) {
+                $(".senha").addClass('is-invalid');
+                $(".erroSenha").text("Preencha a Senha");
+                $(".erroSenha").removeClass("d-none");
+                return false;
+            } else {
+                $(".senha").removeClass('is-invalid');
+                $(".senha").addClass('is-valid');
+                $(".erroSenha").addClass("d-none");
+                return true;
+            }
+        }
+         function limparFormulario(){
+                $(".senha").val('');
+                $(".senha").removeClass('is-valid');  
+                $(".user").val('');
+                $(".user").removeClass('is-valid');
+            }
+        
       
     </script>
 }
