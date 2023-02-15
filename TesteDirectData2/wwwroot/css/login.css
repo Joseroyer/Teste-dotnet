@@ -58,8 +58,4 @@ input[type="password"] {
     justify-content: center;
     align-items: center;
     /*Abaixo definições para visualização teste*/
-    width: 100px;
-    height: 100px;
-    float: left;
-    border: 1px solid red;
 }
