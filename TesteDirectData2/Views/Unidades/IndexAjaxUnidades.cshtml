@@ -1,0 +1,314 @@
+﻿@{
+    ViewData["Title"] = "Unidades Cadastradas";
+}
+
+<div class="p-5">
+    <div class="border border-light border-3 rounded">
+        <div class="container">
+            <div class="p-5">
+                <div class="row">
+                    <div class="col-8">
+                        <h6>Unidades cadastradas</h6>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-sm btn-outline-success novaUnidade" id="novaUnidade">Nova unidade</button>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="p-5 rounded shadow-sm" id="divTabela">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modal" class="modal fade" role="dialog">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title"></h6>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" class="form-control form-control-sm unidadeId" id="unidadeId" />
+                <div class="form-group">
+                    <label>Nome</label>
+                    <input type="text" class="form-control form-control-sm nome" id="nome" />
+                    <span class="text-danger erroNome d-none"></span>
+                </div>
+                <div class="form-group">
+                    <label>Localidade</label>
+                    <input type="text" class="form-control form-control-sm localidade" id="localidade" />
+                    <span class="text-danger erroLocalidade d-none"></span>
+                </div>
+                <div class="form-group">
+                    <label>Contato</label>
+                    <input type="text" class="form-control form-control-sm contato" id="contato" onkeyup="mascara('(##)#####-####',this,event)" />
+                    <span class="text-danger erroContato d-none"></span>
+                </div>
+            <div class="modal-footer">
+                <div class="form-group">
+                    <input type="button" value="Salvar" class="btn btn-sm btn-outline-success btnSalvar" />
+                    <input type="button" value="Cancelar" class="btn btn-sm btn-light" data-bs-dismiss="modal" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+    @section scripts{
+        <script>
+
+            $(document).ready(function () {
+                carregaDados();
+            });
+
+            $("#novaUnidade").click(function () {
+                escolherTituloModal("Cadastro de nova unidade");
+                limparFormulario();
+                mostrarModal();
+                $('#unidadeId').val(0);
+            });
+
+            
+            $(".btnSalvar").click(function(){
+                var unidade = {
+                    ID: $('.unidadeId').val(),
+                    nome: $('#nome').val(),
+                    Localidade: $('#localidade').val(),
+                    Contato: $('#contato').val()
+                };
+               
+                if(validarFormulario(unidade)){
+                    console.log(parseInt(unidade.ID));
+                    if (parseInt(unidade.ID) > 0) {
+                        console.log("aaaa");
+                        atualizarUnidade(unidade);
+                    }else
+                        criarUnidade(unidade);
+                }
+            });
+
+            function carregaDados() {
+                $.ajax({
+                    url: "@Url.Action("getUnidades","Unidades")",
+                    method: "GET",
+                    success: function (unidade) {
+                        montarTabela(unidade);
+                    }
+                });
+
+                function montarTabela(unidade) {
+                    let i = 0;
+                    let divTabela = document.getElementById("divTabela");
+                    let table = '<table class="table table-sm table-hover table-striped tabela> id="tabela"';
+                    table += '<thead><tr><th>ID</th><th>Nome</th><th>Localidade</th><th>Contato</th><th colspan="2">Ações</th></tr></thead><tbody id="tbody">';
+                    for (i = 0; i < unidade.length; i++) {
+                        table += `<tr id="${unidade[i].id}">
+                                                                <td>${unidade[i].id}</td>
+                                                                <td>${unidade[i].nome}</td>
+                                                                <td>${unidade[i].localidade}</td>
+                                                                <td>${unidade[i].contato}</td>
+                                                                <td><button class="btn btn-sm btn-outline-info" onclick='pegarUnidadePeloId(${unidade[i].id})'>Atualizar</button></td>
+                                                                <td><button class="btn btn-sm btn-outline-danger" onclick='excluirUnidadePeloId(${unidade[i].id})'>Excluir</button></td>
+                                                                </tr>`;
+                    }
+
+                    table += '</tbody></table>';
+                    divTabela.innerHTML = table;
+                }
+            }
+
+
+            function criarUnidade(unidade){
+                $.ajax({
+                    url: "@Url.Action("novaUnidade","Unidades")",
+                    method: "POST",
+                    data:{
+                        unidade: unidade
+                    },
+                    success: function (result) {
+                        $("#modal").modal('hide');
+                            carregaDados();
+                    }
+                });
+            }
+
+            function pegarUnidadePeloId(unidadeId) {
+                $.ajax({
+                    url: "@Url.Action("pegarUnidadeID","Unidades")",
+                    method: "GET",
+                    data: {
+                        unidadeId: unidadeId
+                    },
+                    success: function (result) {
+                        mostrarModal();
+                        escolherTituloModal(`Atualizar Unidade de ${result.nome}`);
+                        $(".unidadeId").val(result.id);
+                        $(".nome").val(result.nome);
+                        $(".localidade").val(result.localidade);
+                        $(".contato").val(result.contato);
+                    }
+                });
+            }
+            function atualizarUnidade(unidade) {
+                console.log("teste");
+                $.ajax({
+                    url: "@Url.Action("atualizarUnidade","Unidades")",
+                    method: "POST",
+                    data: {
+                        unidade: unidade
+                    },
+                    success: function (result) {
+                       $("#modal").modal("hide");
+                       console.log(result);
+                        var linhaTabela = $(`#${result.id}`);
+                         linhaTabela[0].childNodes[0].innerText = result.nome;
+                         linhaTabela[0].childNodes[1].innerText = result.localidade;
+                         linhaTabela[0].childNodes[2].innerText = result.contato;
+                         carregaDados();
+                        limparFormulario();
+                    }
+                });
+            }
+
+            function excluirUnidadePeloId(unidadeId){
+                $.ajax({
+                    url: "@Url.Action("excluirUnidade","Unidades")",
+                    method: "POST",
+                    data: {
+                        unidadeId: unidadeId
+                    },
+                    success: function (result) {
+                        if(result){
+                            alert("Unidade excluida com sucesso");
+                            document.getElementById(unidadeId).remove();
+                        }
+                        else{
+                            alert(result.mensagem);
+                        }
+                    }
+                });
+            }
+            
+            function limparFormulario(){
+                $(".nome").val('');
+                $(".nome").removeClass('is-valid');
+                $(".localidade").val('');
+                $(".localidade").removeClass('is-valid');
+                $(".contato").val('');
+                $(".contato").removeClass('is-valid');
+        
+            }
+            
+            function validarFormulario(unidade) {
+                console.log(unidade.localidade);
+                console.log(unidade.contato);
+                let nomeValido = validarNome(unidade.nome);
+                let localidadeValido = validarLocalidade(unidade.Localidade);
+                let contatoValido = validarContato(unidade.Contato);
+                console.log(localidadeValido);
+                if (nomeValido == true && localidadeValido == true && contatoValido == true) {
+                    return true;
+                }
+                return false;
+            }
+            
+            function validarNome(nome) {
+                console.log(nome);
+                if (nome == '' || nome == undefined || nome.length < 5) {
+                     $(".nome").addClass('is-invalid');
+                     $(".erroNome").text("Preencha o nome");
+                     $(".erroNome").removeClass("d-none");
+                    return false;
+                } else if (nome.length > 25) {
+                    $(".nome").addClass('is-invalid');
+                    $(".erroNome").text("Use menos caracteres");
+                    $(".erroNome").removeClass("d-none");
+                    return false
+                } else {
+                    $(".nome").removeClass('is-invalid');
+                    $(".nome").addClass('is-valid');
+                     $(".erroNome").addClass("d-none");
+                    return true;
+                }
+            }
+            function validarLocalidade(data){
+                if (data == undefined || data.length < 2) {
+                    $(".localidade").addClass('is-invalid');
+                    $(".erroLocalidade").text("Preencha a Localidade");
+                    $(".erroLocalidade").removeClass("d-none");
+                    return false;
+                }else {
+                    $('.localidade').removeClass('is-invalid');
+                    $('.localidade').addClass('is-valid');
+                    $('.erroLocalidade').addClass('d-none');
+                    return true;
+                }
+            }
+            function validarContato(data){
+                if(data == undefined || data == '' ){
+                    $('.contato').addClass('is-invalid');
+                    $('.erroContato').text("Preencha o Contato");
+                    $('.erroContato').removeClass("d-none");
+                    return false;
+                }else{
+                    $('.contato').removeClass('is-invalid');
+                    $('.contato').addClass('is-valid');
+                    $('.errocontato').addClass('d-none');
+                    return true;
+                }
+                
+            }
+
+            function escolherTituloModal(texto) {
+                $(".modal-title").text(texto);
+            }
+
+            function mostrarModal() {
+                new bootstrap.Modal($("#modal"), {}).show();
+            }
+
+            function mascara(m, t, e) {
+                var cursor = t.selectionStart;
+                var texto = t.value;
+                texto = texto.replace(/\D/g, '');
+                var l = texto.length;
+                var lm = m.length;
+                if (window.event) {
+                    id = e.keyCode;
+                } else if (e.which) {
+                    id = e.which;
+                }
+                cursorfixo = false;
+                if (cursor < l) cursorfixo = true;
+                var livre = false;
+                if (id == 16 || id == 19 || (id >= 33 && id <= 40)) livre = true;
+                ii = 0;
+                mm = 0;
+                if (!livre) {
+                    if (id != 8) {
+                        t.value = "";
+                        j = 0;
+                        for (i = 0; i < lm; i++) {
+                            if (m.substr(i, 1) == "#") {
+                                t.value += texto.substr(j, 1);
+                                j++;
+                            } else if (m.substr(i, 1) != "#") {
+                                t.value += m.substr(i, 1);
+                            }
+                            if (id != 8 && !cursorfixo) cursor++;
+                            if ((j) == l + 1) break;
+
+                        }
+                    }
+                }
+                if (cursorfixo && !livre) cursor--;
+                t.setSelectionRange(cursor, cursor);
+            }
+   
+        </script>
+}

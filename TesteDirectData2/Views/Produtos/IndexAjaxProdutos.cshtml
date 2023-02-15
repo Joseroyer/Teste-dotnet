@@ -1,0 +1,342 @@
+﻿@{
+    ViewData["Title"] = "Produtos Cadastrados";
+}
+
+<div class="p-5">
+    <div class="border border-light border-3 rounded">
+        <div class="container">
+            <div class="p-5">
+                <div class="row">
+                    <div class="col-8">
+                        <h6>Produtos cadastrados</h6>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-sm btn-outline-success novoProduto" id="novoProduto">Nova Produto</button>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="p-5 rounded shadow-sm" id="divTabela">
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modal" class="modal fade" role="dialog">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title"></h6>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" class="form-control form-control-sm produtoId" id="produtoId" />
+                <div class="form-group">
+                    <label>Nome</label>
+                    <input type="text" class="form-control form-control-sm nome" id="nome" />
+                    <span class="text-danger erroNome d-none"></span>
+                </div>
+                <div class="form-group">
+                    <label>Preço de Venda</label>
+                    <input type="number" class="form-control form-control-sm precoVenda" id="precoVenda" min="1" />
+                    <span class="text-danger erroprecoVenda d-none"></span>
+                </div>
+                <div class="form-group">
+                    <label>Estoque</label>
+                    <input type="number" class="form-control form-control-sm estoque" id="estoque"  min="1"/>
+                    <span class="text-danger erroEstoque d-none"></span>
+                </div>
+                <div class="form-group">
+                    <label>Unidade</label>
+                    <select id="unidade" name="unidade" class="form-control form-control-sm unidade">
+                      <option>Selecione uma Unidade</option>
+                      <option></option>
+                  </select>
+               
+                </div>
+                <div class="form-group">
+                    <label>Categoria</label>
+                    <select id="categoria" name="categoria" class="form-control form-control-sm categoria">
+                        <option>Selecione uma Categoria</option>
+                      <option></option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <input type="button" value="Salvar" class="btn btn-sm btn-outline-success btnSalvar" />
+                        <input type="button" value="Cancelar" class="btn btn-sm btn-light" data-bs-dismiss="modal" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+            carregaDados();
+        });
+
+        $("#novoProduto").click(function () {
+            escolherTituloModal("Cadastro de novo Produto");
+            limparFormulario();
+            mostrarModal($('#produtoId').val());
+            $('#produtoId').val(0);
+        });
+
+
+        $(".btnSalvar").click(function () {
+            var produto = {
+                ID: $('.produtoId').val(),
+                nome: $('#nome').val(),
+                PrecoVenda: $('#precoVenda').val(),
+                Estoque: $('#estoque').val(),
+                UnidadeID: $("#unidade").val(),
+                CategoriaID: $("#categoria").val()
+            };
+
+                if (validarFormulario(produto)) {
+                    console.log(parseInt(produto.ID));
+                    if (parseInt(produto.ID) > 0) {
+                        console.log("aaaa");
+                        atualizarProduto(produto);
+                } else
+                    criarProduto(produto);
+            }
+        });
+        
+        function carregaDados() {
+            $.ajax({
+                url: "@Url.Action("getProdutos","Produtos")",
+                method: "GET",
+                success: function (result) {
+                    montarTabela(result);
+                }
+            });
+
+            function montarTabela(result) {
+                let i = 0;
+                let divTabela = document.getElementById("divTabela");
+
+                let table = '<table class="table table-sm table-hover table-striped tabela>"';
+                table += '<thead><tr><th>ID</th><th>Nome</th><th>Preco Venda</th><th>Estoque</th><th>Unidade</th><th>Categoria</th><th colspan="2">Ações</th></tr></thead><tbody>';
+                for (i = 0; i < result.length; i++) {
+                    table += `<tr id="${result[i].id}">
+                                                        <td>${result[i].id}</td>
+                                                        <td>${result[i].nome}</td>
+                                                        <td>${result[i].precoVenda}</td>
+                                                        <td>${result[i].estoque}</td>
+                                                        <td>${result[i].unidade.nome}</td>
+                                                        <td>${result[i].categorias.nome}</td>
+                                                                    <td><button class="btn btn-sm btn-outline-info" onclick='pegarProdutoPeloId(${result[i].id})'>Atualizar</button></td>
+                                                            <td><button class="btn btn-sm btn-outline-danger" onclick='excluirProdutoPeloId(${result[i].id})'>Excluir</button></td>
+                                                </tr>`;
+                }
+
+                table += '</tbody></table>';
+                divTabela.innerHTML = table;
+            }
+        }
+
+        function criarProduto(produto){
+                $.ajax({
+                    url: "@Url.Action("novoProduto","Produtos")",
+                    method: "POST",
+                    data:{
+                        produto: produto
+                    },
+                    success: function (result) {
+                        $("#modal").modal('hide');
+                            carregaDados();
+                    }
+                });
+          }
+
+            function pegarProdutoPeloId(produtoId) {
+                $.ajax({
+                    url: "@Url.Action("pegarProdutoId","Produtos")",
+                    method: "GET",
+                    data: {
+                        produtoId: produtoId
+                    },
+                    success: function (result) {
+                        console.log(produtoId);
+                        mostrarModal(result);
+                        escolherTituloModal(`Atualizar Produto  ${result.nome}`);
+                        console.log(result);
+                        console.log(result.unidadeID);
+                        console.log(result.categoriaID);
+                        $(".produtoId").val(result.id);
+                        $(".nome").val(result.nome);
+                        $(".precoVenda").val(result.precoVenda);
+                        $(".estoque").val(result.estoque);
+                        $(".unidade").val(result.unidade);
+                        $(".categoria").val(result.categorias);
+                    }
+                });
+            }
+            function atualizarProduto(produto) {
+                console.log("teste");
+                $.ajax({
+                    url: "@Url.Action("atualizarProduto","Produtos")",
+                    method: "POST",
+                    data: {
+                        produto: produto
+                    },
+                    success: function (result) {
+                       $("#modal").modal("hide");
+                       console.log(result);
+                        var linhaTabela = $(`#${result.id}`);
+                         linhaTabela[0].childNodes[0].innerText = result.nome;
+                         linhaTabela[0].childNodes[1].innerText = result.precoVenda;
+                         linhaTabela[0].childNodes[2].innerText = result.estoque;
+                         linhaTabela[0].childNodes[3].innerText = result.unidade;
+                         linhaTabela[0].childNodes[4].innerText = result.categorias;
+                         carregaDados();
+                         limparFormulario();
+                    }
+                });
+            }
+
+            function excluirProdutoPeloId(produtoId){
+                $.ajax({
+                    url: "@Url.Action("excluirProduto","Produtos")",
+                    method: "POST",
+                    data: {
+                        produtoId: produtoId
+                    },
+                    success: function (result) {
+                        if(result){
+                            alert("Produto excluido com sucesso");
+                            document.getElementById(produtoId).remove();
+                        }
+                        else{
+                            alert(result.mensagem);
+                        }
+                    }
+                });
+            }
+            
+            function limparFormulario(){
+                $(".nome").val('');
+                $(".nome").removeClass('is-valid');  
+                $(".precoVenda").val('');
+                $(".precoVenda").removeClass('is-valid');
+                $(".estoque").val('');
+                $(".estoque").removeClass('is-valid');
+               
+            }
+            
+            function validarFormulario(produto) {
+                let nomeValido = validarNome(produto.nome);
+                //let precoVendaValido = validarPrecoVenda(produto.precoVenda);
+                //let estoqueValido = validarEstoque(produto.estoque);
+                if (nomeValido == true) {
+                    return true;
+                }
+                return false;
+            }
+            
+            function validarNome(nome) {
+                console.log(nome);
+                if (nome.trim() == '' || nome == undefined || nome.length < 3) {
+                     $(".nome").addClass('is-invalid');
+                     $(".erroNome").text("Preencha o nome");
+                     $(".erroNome").removeClass("d-none");
+                    return false;
+                } else if (nome.length > 25) {
+                    $(".nome").addClass('is-invalid');
+                    $(".erroNome").text("Use menos caracteres");
+                    $(".erroNome").removeClass("d-none");
+                    return false
+                } else {
+                    $(".nome").removeClass('is-invalid');
+                    $(".nome").addClass('is-valid');
+                     $(".erroNome").addClass("d-none");
+                    return true;
+                }
+            }
+            //function validarPrecoVenda(data){
+            //    console.log(data);
+            //    if (data == '' || data == undefined || isNaN(data)) {
+            //        $(".precoVenda").addClass('is-invalid');
+            //        $(".erroprecoVenda").text("Preencha o Preco de Venda");
+            //        $(".erroprecoVenda").removeClass("d-none");
+            //        return false;
+            //    } else if(parseFloat(data) < 1 ){
+            //         $(".precoVenda").addClass('is-invalid');
+            //         $(".erroprecoVenda").text("O Preço de Venda precisa ser maior que 0");
+            //         $(".erroprecoVenda").removeClass("d-none");
+            //    }else {
+            //        $('.precoVenda').removeClass('is-invalid');
+            //        $('.precoVenda').addClass('is-valid');
+            //        $('.erroprecoVenda').addClass('d-none');
+            //        return true;
+            //    }
+            //}
+            //function validarEstoque(data) {
+            //    console.log(data);
+            //    if (data== '' || data == undefined || isNaN(data)) {
+            //        $(".estoque").addClass('is-invalid');
+            //        $(".erroEstoque").text("Preencha o Estoque");
+            //        $(".erroEstoque").removeClass("d-none");
+            //        return false;
+            //    } else if (parseInt(data) <= 1 ) {
+            //        $(".estoque").addClass('is-invalid');
+            //        $(".erroEstoque").text("O Estoque precisa ser maior que 0");
+            //        $(".erroEstoque").removeClass("d-none");
+            //    } else {
+            //        $('.estoque').removeClass('is-invalid');
+            //        $('.estoque').addClass('is-valid');
+            //        $('.erroEstoque').addClass('d-none');
+            //        return true;
+            //    }
+            //}
+
+            function escolherTituloModal(texto) {
+                $(".modal-title").text(texto);
+            }
+
+            function mostrarModal(result) {
+                new bootstrap.Modal($("#modal"), {}).show();
+                    listarUnidade();
+                    listarCategoria();
+            }
+
+            function listarUnidade() {
+                $.ajax({
+                    url: "@Url.Action("getUnidades","Unidades")",
+                    method: "GET",
+                    success: function (data) {
+                        appendDataUnidade(data);
+                    }
+                });
+            }
+            function appendDataUnidade(data) {
+                    var resp = "";
+                    for (let i = 0; i < data.length; i++)
+                        resp += `<option d-tokens="${data[i].nome}" value="` + (i + 1) + `">` + `${data[i].nome}</option>`;
+                    document.getElementById("unidade").innerHTML = resp;
+            }
+
+            function listarCategoria() {
+                $.ajax({
+                    url: "@Url.Action("getCategorias","Categorias")",
+                    method: "GET",
+                    success: function (data) {
+                        appendDataCategoria(data);
+                    }
+                });
+            }
+            function appendDataCategoria(data) {
+                var resp = "";
+                for (let i = 0; i < data.length; i++)
+                    resp += `<option d-tokens="${data[i].nome}" value="` + (i + 1) + `">` + `${data[i].nome}</option>`;
+                document.getElementById("categoria").innerHTML = resp;
+            }
+        
+    </script>
+}

@@ -1,0 +1,90 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <section id="hero" class="d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 d-flex flex-column justify-content-center pt-4 pt-lg-0 order-2 order-lg-1" data-aos="fade-up" data-aos-delay="200">
+
+                    <h2></h2>
+                    <div class="d-flex justify-content-center justify-content-lg-start">
+                    </div>
+                </div>
+                <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-in" data-aos-delay="200">
+                </div>
+            </div>
+
+            <div class="containerLog">
+                <div class="logo">Login</div>
+                <div class="login-item">
+                    <form id="fdados" class="form form-login">
+
+                        <div class="form-field">
+                            <label class="user" for="login-username"><span class="hidden"></span></label>
+                            <input id="user"
+                                   name="user"
+                                   type="text"
+                                   class="form-input user"
+                                   placeholder="Usuário"
+                                   required />
+                        </div>
+
+                        <div class="form-field">
+                            <label class="lock" for="login-password"><span class="hidden"></span></label>
+                            <input id="senha"
+                                   name="senha"
+                                   type="password"
+                                   class="form-input"
+                                   placeholder="Senha"
+                                   required />
+                        </div>
+
+
+                        <div class="form-field">
+                            <input type="button" class="btnLogar" value="Log in" id="btnLogar"/>
+                        </div>
+                       
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts{
+    <script>
+        $("#btnLogar").click(function () {
+            var usuario = {
+                User: $('#user').val(),
+                Senha: $('#senha').val()
+            };
+            //if(validarFormulario(usuario))
+             logar(usuario);
+        });
+
+        function logar(usuario){
+            $.ajax({
+                url: "@Url.Action("loginUser","Usuarios")",
+                method: "POST",
+                data: {
+                    usuario: usuario 
+                },
+                success: function (result) {
+                    if(result)
+                        alert("Sucesso");
+                    else
+                        alert(result.mensagem);
+                }
+            });
+        }
+
+        function validarFormulario(usuario){
+
+        }
+
+
+    </script>
+}
+

@@ -1,0 +1,229 @@
+﻿@{
+    ViewData["Title"] = "Categorias Cadastradas";
+}
+
+<div class="p-5">
+    <div class="border border-light border-3 rounded">
+        <div class="container">
+            <div class="p-5">
+                <div class="row">
+                    <div class="col-8">
+                        <h6>Categorias cadastradas</h6>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-sm btn-outline-success novaCategoria" id="novaCategoria">Nova Categoria</button>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="p-5 rounded shadow-sm" id="divTabela">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modal" class="modal fade" role="dialog">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title"></h6>
+            </div>
+
+            <div class="modal-body">
+                <input type="hidden" class="form-control form-control-sm categoriaId" id="categoriaId" />
+                <div class="form-group">
+                    <label>Nome</label>
+                    <input type="text" class="form-control form-control-sm nome" id="nome" />
+                    <span class="text-danger erroNome d-none"></span>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <div class="form-group">
+                    <input type="button" value="Salvar" class="btn btn-sm btn-outline-success btnSalvar" />
+                    <input type="button" value="Cancelar" class="btn btn-sm btn-light" data-bs-dismiss="modal" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+            carregaDados();
+        });
+
+        $("#novaCategoria").click(function () {
+            escolherTituloModal("Cadastro de nova Categoria");
+            limparFormulario();
+            mostrarModal();
+            $('#categoriaId').val(0);
+        });
+
+
+        $(".btnSalvar").click(function () {
+            var categoria = {
+                ID: $('.categoriaId').val(),
+                nome: $('#nome').val()
+            };
+
+            if (validarFormulario(categoria)) {
+                console.log(parseInt(categoria.ID));
+                if (parseInt(categoria.ID) > 0) {
+                    console.log("aaaa");
+                    atualizarcategoria(categoria);
+                } else
+                    criarcategoria(categoria);
+            }
+        });
+
+        function carregaDados() {
+            $.ajax({
+                url: "@Url.Action("getCategorias","Categorias")",
+                method: "GET",
+                success: function (categoria) {
+                    montarTabela(categoria);
+                }
+            });
+
+            function montarTabela(categoria) {
+                let i = 0;
+                let divTabela = document.getElementById("divTabela");
+                let table = '<table class="table table-sm table-hover table-striped tabela> id="tabela"';
+                table += '<thead><tr><th>ID</th><th>Nome</th><th colspan="2">Ações</th></tr></thead><tbody id="tbody">';
+                for (i = 0; i < categoria.length; i++) {
+                    table += `<tr id="${categoria[i].id}">
+                                                                        <td>${categoria[i].id}</td>
+                                                                        <td>${categoria[i].nome}</td>
+                                                                        <td><button class="btn btn-sm btn-outline-info" onclick='pegarcategoriaPeloId(${categoria[i].id})'>Atualizar</button></td>
+                                                                        <td><button class="btn btn-sm btn-outline-danger" onclick='excluircategoriaPeloId(${categoria[i].id})'>Excluir</button></td>
+                                                                        </tr>`;
+                }
+
+                table += '</tbody></table>';
+                divTabela.innerHTML = table;
+            }
+        }
+
+
+        function criarcategoria(categoria) {
+            $.ajax({
+                url: "@Url.Action("novaCategoria","Categorias")",
+                method: "POST",
+                data: {
+                    categoria: categoria
+                },
+                success: function (result) {
+                    $("#modal").modal('hide');
+                    carregaDados();
+                }
+            });
+        }
+
+        function pegarcategoriaPeloId(categoriaId) {
+            $.ajax({
+                url: "@Url.Action("pegarCategoriaId","Categorias")",
+                method: "GET",
+                data: {
+                    categoriaId: categoriaId
+                },
+                success: function (result) {
+                    mostrarModal();
+                    escolherTituloModal(`Atualizar categoria  ${result.nome}`);
+                    $(".categoriaId").val(result.id);
+                    $(".nome").val(result.nome);
+                }
+            });
+        }
+        function atualizarcategoria(categoria) {
+            console.log("teste");
+            $.ajax({
+                url: "@Url.Action("atualizarCategoria","Categorias")",
+                method: "POST",
+                data: {
+                    categoria: categoria
+                },
+                success: function (result) {
+                    $("#modal").modal("hide");
+                    console.log(result);
+                    var linhaTabela = $(`#${result.id}`);
+                    linhaTabela[0].childNodes[0].innerText = result.nome;
+                    carregaDados();
+                    limparFormulario();
+                }
+            });
+        }
+
+        function excluircategoriaPeloId(categoriaId) {
+            $.ajax({
+                url: "@Url.Action("excluirCategoria","Categorias")",
+                method: "POST",
+                data: {
+                    categoriaId: categoriaId
+                },
+                success: function (result) {
+                    if (result) {
+                        alert("categoria excluida com sucesso");
+                        document.getElementById(categoriaId).remove();
+                    }
+                    else {
+                        alert(result.mensagem);
+                    }
+                }
+            });
+        }
+
+        function limparFormulario() {
+            $(".nome").val('');
+            $(".nome").removeClass('is-valid');
+        }
+
+        function validarFormulario(categoria) {
+            let nomeValido = validarNome(categoria.nome);
+            if (nomeValido == true) {
+                return true;
+            }
+            return false;
+        }
+
+        function validarNome(nome) {
+            console.log(nome);
+            if (nome.trim() == '' || nome == undefined || nome.length < 5) {
+                $(".nome").addClass('is-invalid');
+                $(".erroNome").text("Preencha o nome");
+                $(".erroNome").removeClass("d-none");
+                return false;
+            } else if (nome.length > 25) {
+                $(".nome").addClass('is-invalid');
+                $(".erroNome").text("Use menos caracteres");
+                $(".erroNome").removeClass("d-none");
+                return false
+            } else {
+                $(".nome").removeClass('is-invalid');
+                $(".nome").addClass('is-valid');
+                $(".erroNome").addClass("d-none");
+                return true;
+            }
+        }
+
+        function escolherTituloModal(texto) {
+            $(".modal-title").text(texto);
+        }
+
+        function mostrarModal() {
+            new bootstrap.Modal($("#modal"), {}).show();
+        }
+
+
+
+
+    </script>
+}

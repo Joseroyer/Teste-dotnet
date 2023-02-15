@@ -1,0 +1,47 @@
+﻿
+<div class="wrapper">
+    <form class="form-signin">
+        <h2 class="form-signin-heading text-align-center" style=" text-align: center; padding-top:2px">Login</h2>
+        <div style=" margin-top: 5px;">
+            <input type="text" class="form-control" id="user" name="user" placeholder="Usuário" required="" autofocus="" />
+            <span class="text-danger erroUser d-none"></span>
+        </div>
+        <div style=" margin-top: 5px;">
+            <input type="password" class="form-control" name="senha" id="senha" placeholder="Senha" required="" />
+            <span class="text-danger erroSenha d-none"></span>
+        </div>
+        <button id="btnLogar" class="btn btn-lg btn-primary btn-block" style="margin-top: 5px;" type="button">Login</button>
+    </form>
+</div>
+
+@section scripts{
+    <script>
+
+        $("#btnLogar").click(function () {
+            var usuario = {
+                User: $('#user').val(),
+                Senha: $('#senha').val()
+            };
+            console.log(usuario);
+            logar(usuario);
+        });
+
+        function logar(usuario) {
+            $.ajax({
+                url: "@Url.Action("validarUser","Usuarios")",
+                method: "POST",
+                data:{
+                    usuario: usuario
+                },
+                success: function (result) {
+                    //console.log(result);
+                    if (result.mensagem)
+                        alert("Logado");
+                    else
+                        alert(result.mensagem);
+                }
+            });
+        }
+      
+    </script>
+}
