@@ -98,7 +98,7 @@
                 CategoriaID: $("#categoria").val()
             };
 
-                if (validarFormulario(produto)) {
+                if (validarFormulario(produto.nome,parseInt(produto.PrecoVenda),parseInt(produto.Estoque))) {
                     console.log(parseInt(produto.ID));
                     if (parseInt(produto.ID) > 0) {
                         console.log("aaaa");
@@ -230,11 +230,11 @@
                
             }
             
-            function validarFormulario(produto) {
-                let nomeValido = validarNome(produto.nome);
-                //let precoVendaValido = validarPrecoVenda(produto.precoVenda);
-                //let estoqueValido = validarEstoque(produto.estoque);
-                if (nomeValido == true) {
+            function validarFormulario(nome,precoVenda,estoque) {
+                let nomeValido = validarNome(nome);
+                let precoVendaValido = validarPrecoVenda(precoVenda);
+                let estoqueValido = validarEstoque(estoque);
+                if (nomeValido == true && precoVendaValido && estoqueValido) {
                     return true;
                 }
                 return false;
@@ -259,42 +259,42 @@
                     return true;
                 }
             }
-            //function validarPrecoVenda(data){
-            //    console.log(data);
-            //    if (data == '' || data == undefined || isNaN(data)) {
-            //        $(".precoVenda").addClass('is-invalid');
-            //        $(".erroprecoVenda").text("Preencha o Preco de Venda");
-            //        $(".erroprecoVenda").removeClass("d-none");
-            //        return false;
-            //    } else if(parseFloat(data) < 1 ){
-            //         $(".precoVenda").addClass('is-invalid');
-            //         $(".erroprecoVenda").text("O Preço de Venda precisa ser maior que 0");
-            //         $(".erroprecoVenda").removeClass("d-none");
-            //    }else {
-            //        $('.precoVenda').removeClass('is-invalid');
-            //        $('.precoVenda').addClass('is-valid');
-            //        $('.erroprecoVenda').addClass('d-none');
-            //        return true;
-            //    }
-            //}
-            //function validarEstoque(data) {
-            //    console.log(data);
-            //    if (data== '' || data == undefined || isNaN(data)) {
-            //        $(".estoque").addClass('is-invalid');
-            //        $(".erroEstoque").text("Preencha o Estoque");
-            //        $(".erroEstoque").removeClass("d-none");
-            //        return false;
-            //    } else if (parseInt(data) <= 1 ) {
-            //        $(".estoque").addClass('is-invalid');
-            //        $(".erroEstoque").text("O Estoque precisa ser maior que 0");
-            //        $(".erroEstoque").removeClass("d-none");
-            //    } else {
-            //        $('.estoque').removeClass('is-invalid');
-            //        $('.estoque').addClass('is-valid');
-            //        $('.erroEstoque').addClass('d-none');
-            //        return true;
-            //    }
-            //}
+            function validarPrecoVenda(data){
+                console.log(data);
+                if (data == '' || data == undefined || isNaN(data)) {
+                    $(".precoVenda").addClass('is-invalid');
+                    $(".erroprecoVenda").text("Preencha o Preco de Venda");
+                    $(".erroprecoVenda").removeClass("d-none");
+                    return false;
+                } else if(parseFloat(data) < 1 ){
+                     $(".precoVenda").addClass('is-invalid');
+                     $(".erroprecoVenda").text("O Preço de Venda precisa ser maior que 0");
+                     $(".erroprecoVenda").removeClass("d-none");
+                }else {
+                    $('.precoVenda').removeClass('is-invalid');
+                    $('.precoVenda').addClass('is-valid');
+                    $('.erroprecoVenda').addClass('d-none');
+                    return true;
+                }
+            }
+            function validarEstoque(data) {
+                console.log(data);
+                if (data== '' || data == undefined || isNaN(data)) {
+                    $(".estoque").addClass('is-invalid');
+                    $(".erroEstoque").text("Preencha o Estoque");
+                    $(".erroEstoque").removeClass("d-none");
+                    return false;
+                } else if (parseInt(data) <= 1 ) {
+                    $(".estoque").addClass('is-invalid');
+                    $(".erroEstoque").text("O Estoque precisa ser maior que 0");
+                    $(".erroEstoque").removeClass("d-none");
+                } else {
+                    $('.estoque').removeClass('is-invalid');
+                    $('.estoque').addClass('is-valid');
+                    $('.erroEstoque').addClass('d-none');
+                    return true;
+                }
+            }
 
             function escolherTituloModal(texto) {
                 $(".modal-title").text(texto);
