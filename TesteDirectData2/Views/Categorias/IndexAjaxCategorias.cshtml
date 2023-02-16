@@ -61,10 +61,10 @@
             if(sessionStorage.getItem("Autorizado")=="true")
                 carregaDados();
             else{
+                alert("Não está logado");
                 setTimeout(function () {
-                    alert("Não está logado");
                     window.location.href = '@Url.Action("Index","Usuarios")';
-                }, 3000);
+                }, 1500);
             }
         });
 

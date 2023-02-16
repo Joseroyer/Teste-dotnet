@@ -77,7 +77,14 @@
     <script>
 
         $(document).ready(function () {
-            carregaDados();
+           if(sessionStorage.getItem("Autorizado")=="true")
+                carregaDados();
+            else{
+                alert("Não está logado");
+                setTimeout(function () {
+                    window.location.href = '@Url.Action("Index","Usuarios")';
+                }, 1500);
+            }
         });
 
         $("#novoProduto").click(function () {

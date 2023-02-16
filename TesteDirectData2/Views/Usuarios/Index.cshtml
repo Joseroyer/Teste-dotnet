@@ -20,7 +20,9 @@
 
 @section scripts{
     <script>
-
+         $(document).ready(function () {
+            sessionStorage.removeItem("Autorizado");
+         });
         $("#btnLogar").click(function () {
             var usuario = {
                 User: $('#user').val(),
@@ -34,7 +36,6 @@
         });
 
         function logar(usuario) {
-            sessionStorage.removeItem("Autorizado");
             redirect = '@Url.Action("exibirProdutos","Produtos")';
             $.ajax({
                 url: "@Url.Action("validarUser","Usuarios")",
@@ -46,6 +47,7 @@
                     //console.log(result);
                     if (result.mensagem)
                      {
+                         $(".erroResult").addClass("d-none");
                          $(".successResult").text("Logado com Sucesso");
                          $(".successResult").removeClass("d-none");
                          setTimeout(function(){
@@ -63,8 +65,6 @@
         function validarFormulario(user, senha) {
             let userValido = validarUser(user);
             let senhaValido = validarSenha(senha);
-            //let precoVendaValido = validarPrecoVenda(produto.precoVenda);
-            //let estoqueValido = validarEstoque(produto.estoque);
             if (userValido == true && senhaValido) {
                 return true;
             }
