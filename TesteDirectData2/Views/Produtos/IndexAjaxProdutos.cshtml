@@ -291,7 +291,7 @@
                     $(".erroEstoque").text("Preencha o Estoque");
                     $(".erroEstoque").removeClass("d-none");
                     return false;
-                } else if (parseInt(data) <= 1 ) {
+                } else if (parseInt(data) < 1 ) {
                     $(".estoque").addClass('is-invalid');
                     $(".erroEstoque").text("O Estoque precisa ser maior que 0");
                     $(".erroEstoque").removeClass("d-none");
