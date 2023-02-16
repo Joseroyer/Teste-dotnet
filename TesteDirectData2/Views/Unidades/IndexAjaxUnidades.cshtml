@@ -183,6 +183,7 @@
             }
 
             function excluirUnidadePeloId(unidadeId){
+               if (window.confirm("Deseja realmente excluir a Unidade?")) {
                 $.ajax({
                     url: "@Url.Action("excluirUnidade","Unidades")",
                     method: "POST",
@@ -199,6 +200,7 @@
                         }
                     }
                 });
+               }
             }
             
             function limparFormulario(){

@@ -65,6 +65,7 @@
         function validarFormulario(user, senha) {
             let userValido = validarUser(user);
             let senhaValido = validarSenha(senha);
+            $(".erroResult").addClass("d-none");
             if (userValido == true && senhaValido) {
                 return true;
             }

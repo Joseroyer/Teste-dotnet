@@ -209,22 +209,24 @@
             }
 
             function excluirProdutoPeloId(produtoId){
-                $.ajax({
-                    url: "@Url.Action("excluirProduto","Produtos")",
-                    method: "POST",
-                    data: {
-                        produtoId: produtoId
-                    },
-                    success: function (result) {
-                        if(result){
-                            alert("Produto excluido com sucesso");
-                            document.getElementById(produtoId).remove();
+                 if (window.confirm("Deseja realmente excluir o Produto?")) {
+                    $.ajax({
+                        url: "@Url.Action("excluirProduto","Produtos")",
+                        method: "POST",
+                        data: {
+                            produtoId: produtoId
+                        },
+                        success: function (result) {
+                            if(result){
+                                alert("Produto excluido com sucesso");
+                                document.getElementById(produtoId).remove();
+                            }
+                            else{
+                                alert(result.mensagem);
+                            }
                         }
-                        else{
-                            alert(result.mensagem);
-                        }
-                    }
-                });
+                    });
+                   }
             }
             
             function limparFormulario(){

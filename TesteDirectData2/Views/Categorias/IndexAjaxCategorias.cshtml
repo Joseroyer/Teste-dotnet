@@ -170,7 +170,8 @@
         }
 
         function excluircategoriaPeloId(categoriaId) {
-            $.ajax({
+            if (window.confirm("Deseja realmente excluir a Categoria?")) {
+                $.ajax({
                 url: "@Url.Action("excluirCategoria","Categorias")",
                 method: "POST",
                 data: {
@@ -186,6 +187,7 @@
                     }
                 }
             });
+            }
         }
 
         function limparFormulario() {
