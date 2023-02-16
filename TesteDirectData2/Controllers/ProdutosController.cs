@@ -36,7 +36,7 @@ namespace TesteDirectData2.Controllers
             return Problem("Entity set 'DataContext.Produtos'  is null.");
         }
         [HttpPost]
-        public async Task<IActionResult> novoProduto([Bind("ID,Nome,PrecoVenda,Estoque,UnidadeID,CategoriaID")] Produto produto)
+        public async Task<IActionResult> novoProduto(Produto produto)
         {
             if (ModelState.IsValid)
             {

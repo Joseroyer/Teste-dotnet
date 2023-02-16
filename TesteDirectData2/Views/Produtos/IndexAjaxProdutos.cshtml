@@ -129,17 +129,17 @@
                 let divTabela = document.getElementById("divTabela");
 
                 let table = '<table class="table table-sm table-hover table-striped tabela>"';
-                table += '<thead><tr><th>ID</th><th>Nome</th><th>Preco Venda</th><th>Estoque</th><th>Unidade</th><th>Categoria</th><th colspan="2">Ações</th></tr></thead><tbody>';
+                table += '<thead><tr><th>Nome</th><th>Preco Venda</th><th>Estoque</th><th>Unidade</th><th>Categoria</th><th colspan="2">Ações</th></tr></thead><tbody>';
                 for (i = 0; i < result.length; i++) {
                     table += `<tr id="${result[i].id}">
-                                                        <td>${result[i].id}</td>
+                                                        
                                                         <td>${result[i].nome}</td>
                                                         <td>${result[i].precoVenda}</td>
                                                         <td>${result[i].estoque}</td>
                                                         <td>${result[i].unidade.nome}</td>
                                                         <td>${result[i].categorias.nome}</td>
-                                                                    <td><button class="btn btn-sm btn-outline-info" onclick='pegarProdutoPeloId(${result[i].id})'>Atualizar</button></td>
-                                                            <td><button class="btn btn-sm btn-outline-danger" onclick='excluirProdutoPeloId(${result[i].id})'>Excluir</button></td>
+                                                        <td><button class="btn btn-sm btn-outline-info" onclick='pegarProdutoPeloId(${result[i].id})'>Atualizar</button></td>
+                                                         <td><button class="btn btn-sm btn-outline-danger" onclick='excluirProdutoPeloId(${result[i].id})'>Excluir</button></td>
                                                 </tr>`;
                 }
 
@@ -180,8 +180,8 @@
                         $(".nome").val(result.nome);
                         $(".precoVenda").val(result.precoVenda);
                         $(".estoque").val(result.estoque);
-                        $(".unidade").val(result.unidade);
-                        $(".categoria").val(result.categorias);
+                        $(".unidade").val(result.unidadeID);
+                        $(".categoria").val(result.categoriaID);
                     }
                 });
             }
@@ -200,8 +200,8 @@
                          linhaTabela[0].childNodes[0].innerText = result.nome;
                          linhaTabela[0].childNodes[1].innerText = result.precoVenda;
                          linhaTabela[0].childNodes[2].innerText = result.estoque;
-                         linhaTabela[0].childNodes[3].innerText = result.unidade;
-                         linhaTabela[0].childNodes[4].innerText = result.categorias;
+                         linhaTabela[0].childNodes[3].innerText = result.unidadeID;
+                         linhaTabela[0].childNodes[4].innerText = result.categoriaID;
                          carregaDados();
                          limparFormulario();
                     }
@@ -243,7 +243,7 @@
                 let nomeValido = validarNome(nome);
                 let precoVendaValido = validarPrecoVenda(precoVenda);
                 let estoqueValido = validarEstoque(estoque);
-                if (nomeValido == true && precoVendaValido && estoqueValido) {
+                if (nomeValido == true && precoVendaValido==true && estoqueValido==true) {
                     return true;
                 }
                 return false;
@@ -327,7 +327,7 @@
             function appendDataUnidade(data) {
                     var resp = "";
                     for (let i = 0; i < data.length; i++)
-                        resp += `<option d-tokens="${data[i].nome}" value="` + (i + 1) + `">` + `${data[i].nome}</option>`;
+                        resp += `<option value="` + (i + 1) + `">` + `${data[i].nome}</option>`;
                     document.getElementById("unidade").innerHTML = resp;
             }
 
@@ -343,7 +343,7 @@
             function appendDataCategoria(data) {
                 var resp = "";
                 for (let i = 0; i < data.length; i++)
-                    resp += `<option d-tokens="${data[i].nome}" value="` + (i + 1) + `">` + `${data[i].nome}</option>`;
+                    resp += `<option value="` + (i + 1) + `">` + `${data[i].nome}</option>`;
                 document.getElementById("categoria").innerHTML = resp;
             }
         
