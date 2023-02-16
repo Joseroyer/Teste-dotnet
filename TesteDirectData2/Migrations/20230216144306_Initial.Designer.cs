@@ -11,7 +11,7 @@ using TesteDirectData.Context;
 namespace TesteDirectData2.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230214000110_Initial")]
+    [Migration("20230216144306_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
