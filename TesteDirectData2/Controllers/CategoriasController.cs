@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TesteDirectData.Context;
 using TesteDirectData.Models;
+
 
 namespace TesteDirectData2.Controllers
 {
@@ -18,6 +20,7 @@ namespace TesteDirectData2.Controllers
         {
             _context = context;
         }
+
 
         public async Task<IActionResult> ExibirCategorias()
         {

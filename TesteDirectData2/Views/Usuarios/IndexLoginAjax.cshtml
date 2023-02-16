@@ -33,8 +33,11 @@
                 contentType: "application/json",
                 success: function (result) {
                     //console.log(result);
-                    if (result.mensagem)
+                    if (result.mensagem){
+                        sessionStorage.setItem("Autorizado", "true");
+                        console.log(sessionStorage.getItem("Autorizado"));
                         alert("Sucesso");
+                    }
                     else
                         alert("erro")
                 }

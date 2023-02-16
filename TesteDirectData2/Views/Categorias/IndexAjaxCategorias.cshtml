@@ -58,7 +58,14 @@
     <script>
 
         $(document).ready(function () {
-            carregaDados();
+            if(sessionStorage.getItem("Autorizado")=="true")
+                carregaDados();
+            else{
+                setTimeout(function () {
+                    alert("Não está logado");
+                    window.location.href = '@Url.Action("Index","Usuarios")';
+                }, 3000);
+            }
         });
 
         $("#novaCategoria").click(function () {
