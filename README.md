@@ -2,7 +2,7 @@
 
  ### Em **appsettings.json**: Colocar o nome do servidor em **DefaultConnection**!
     "ConnectionStrings": {
-      "DefaultConnection": "NOME_DO_SERVIDOR;database=DirectData;trusted_connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True;"
+      "DefaultConnection": "NOME_DO_SERVIDOR;database=NOME_DA_DATABASE;trusted_connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True;"
     }
     
     
