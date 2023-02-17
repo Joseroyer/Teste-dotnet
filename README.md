@@ -11,7 +11,7 @@
   * Update-database - Subir para o DB.
   * Para remover o migration:
      1. Update-Database -Migration 0
-     2. Remove-Migration - Remove o migration.
+     2. Remove-Migration 
   
   
  
