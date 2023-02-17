@@ -11,7 +11,7 @@
                         <h6>Produtos cadastrados</h6>
                     </div>
                     <div class="col-4">
-                        <button class="btn btn-sm btn-outline-success novoProduto" id="novoProduto">Nova Produto</button>
+                        <button class="btn btn-sm btn-outline-success novoProduto" id="novoProduto">Novo Produto</button>
                     </div>
                 </div>
 
@@ -40,7 +40,7 @@
                 </div>
                 <div class="form-group">
                     <label>Preço de Venda</label>
-                    <input type="number" class="form-control form-control-sm precoVenda" id="precoVenda" min="1" />
+                    <input type="number" step="2" class="form-control form-control-sm precoVenda" id="precoVenda" min="1" />
                     <span class="text-danger erroprecoVenda d-none"></span>
                 </div>
                 <div class="form-group">
@@ -99,13 +99,13 @@
             var produto = {
                 ID: $('.produtoId').val(),
                 nome: $('#nome').val(),
-                PrecoVenda: $('#precoVenda').val(),
+                PrecoVenda: parseFloat($('#precoVenda').val()),
                 Estoque: $('#estoque').val(),
                 UnidadeID: $("#unidade").val(),
                 CategoriaID: $("#categoria").val()
             };
 
-                if (validarFormulario(produto.nome,parseInt(produto.PrecoVenda),parseInt(produto.Estoque))) {
+                if (validarFormulario(produto.nome,parseFloat(produto.PrecoVenda),parseInt(produto.Estoque))) {
                     console.log(parseInt(produto.ID));
                     if (parseInt(produto.ID) > 0) {
                         console.log("aaaa");

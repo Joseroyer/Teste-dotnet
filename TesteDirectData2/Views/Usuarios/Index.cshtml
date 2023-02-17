@@ -2,15 +2,15 @@
 <div class="wrapper">
     <form class="form-signin">
         <h2 class="form-signin-heading text-align-center" style=" text-align: center; padding-top:2px">Login</h2>
-        <div style=" margin-top: 5px;">
+        <div class="mt-3">
             <input type="text" class="form-control user" id="user" name="user" placeholder="Usuário"  autofocus="" />
             <span class="text-danger erroUser d-none"></span>
         </div>
-        <div style=" margin-top: 5px;">
+        <div class="mt-3">
             <input type="password" class="form-control senha" name="senha" id="senha" placeholder="Senha"  />
             <span class="text-danger erroSenha d-none"></span>
         </div>
-        <button id="btnLogar" class="btn btn-lg btn-primary btn-block" style="margin-top: 5px;" type="button">Login</button>
+        <button id="btnLogar" class="btn btn-lg btn-primary btn-block mt-3" type="button">Login</button>
         <div style=" margin-top: 5px;" class="center">
             <span class="text-danger erroResult d-none "></span>
             <span class="text-success successResult d-none "></span>
@@ -36,7 +36,6 @@
         });
 
         function logar(usuario) {
-            redirect = '@Url.Action("exibirProdutos","Produtos")';
             $.ajax({
                 url: "@Url.Action("validarUser","Usuarios")",
                 method: "POST",
@@ -51,7 +50,7 @@
                          $(".successResult").text("Logado com Sucesso");
                          $(".successResult").removeClass("d-none");
                          setTimeout(function(){
-                             window.location.href = redirect;
+                            window.location.href = '@Url.Action("exibirProdutos","Produtos")';
                          },1000);
                           sessionStorage.setItem("Autorizado", "true");
                      }  
